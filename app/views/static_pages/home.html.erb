@@ -1,5 +1,20 @@
-<% #provide(:title, "Home") %>
+<% if signed_in? %>
+<div class="row">
+	<aside class="span4">
+		<section>
+			<%= render "shared/user_info" %>
+		</section>
 
+		<section>
+	        <%= render 'shared/micropost_form' %>
+	      </section>
+	</aside>
+	<div class="span8">
+		<h3>Micropost Feed</h3>
+		<%= render 'shared/feed' %>
+	</div>
+</div>
+<% else %>
 <div class="hero-unit">
 	<h1>Sample App</h1>
 	<p>This is the page for the sample application</p>
@@ -8,3 +23,5 @@
 </div>
 
 <%= link_to image_tag("rails.png", alt: "Rails"), 'http://rubyonrails.org/' %>
+
+<% end %>
