@@ -14,6 +14,8 @@ class User < ActiveRecord::Base
   	
     has_secure_password
   	has_many :microposts, dependent: :destroy
+    has_many :relationships, foreign_key: "follower_id", dependent: :destroy
+    has_many :followed_users, through: :relationships, source: :followed
 
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   	
@@ -34,6 +36,17 @@ class User < ActiveRecord::Base
       Micropost.where("user_id = ?", id)
     end
 
+    def following?(other_user)
+      relationships.find_by_followed_id(other_user.id)
+    end
+
+    def follow!(other_user)
+      self.relationships.create!(followed_id: other_user.id)
+    end
+
+    def unfollow!(other_user)
+      self.find_by_followed_id(other_user).destroy
+    end
     private
 
     def create_remember_token
